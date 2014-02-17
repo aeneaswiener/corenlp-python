@@ -361,7 +361,7 @@ class StanfordCoreNLP:
             pbar.finish()
 
         # interactive shell
-        self.corenlp.expect("\nNLP> ", timeout=3)
+        self.corenlp.expect("\nNLP> ", timeout=60)
 
     def close(self, force=True):
         self.corenlp.terminate(force)
