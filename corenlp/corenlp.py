@@ -397,7 +397,7 @@ class StanfordCoreNLP:
                     break
         clean_up()
 
-        self.corenlp.sendline(to_send)
+        self.corenlp.sendline(to_send.encode('utf8'))
 
         # How much time should we give the parser to parse it?
         # the idea here is that you increase the timeout as a
