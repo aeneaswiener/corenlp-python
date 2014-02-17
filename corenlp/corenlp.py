@@ -341,7 +341,7 @@ class StanfordCoreNLP:
         start_corenlp = init_corenlp_command(corenlp_path, memory, properties)
         if VERBOSE:
             print start_corenlp
-        self.corenlp = pexpect.spawn(start_corenlp)
+        self.corenlp = pexpect.spawn(start_corenlp, timeout=60)
 
         # show progress bar while loading the models
         if VERBOSE:
@@ -361,7 +361,7 @@ class StanfordCoreNLP:
             pbar.finish()
 
         # interactive shell
-        self.corenlp.expect("\nNLP> ", timeout=60)
+        self.corenlp.expect("\nNLP> ")
 
     def close(self, force=True):
         self.corenlp.terminate(force)
