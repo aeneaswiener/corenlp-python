@@ -122,6 +122,13 @@ def remove_id(word):
     return word.count("-") == 0 and word or word[0:word.rindex("-")]
 
 
+def split_id(word):
+    """Splits out the numeric suffix from the parsed recognized words."""
+    if word.count("-") != 1:
+        raise Exception('Unable to parse id from word: %s.' % word)
+    return word[0:word.rindex("-")], word[word.rindex("-")+1:]
+
+
 def parse_bracketed(s):
     '''Parse word features [abc=... def = ...]
     Also manages to parse out features that have XML within them
@@ -185,7 +192,9 @@ def parse_parser_results(text):
             else:
                 split_entry = re.split("\(|, ", line[:-1])
                 if len(split_entry) == 3:
-                    rel, left, right = map(lambda x: remove_id(x), split_entry)
+                    rel = split_entry[0]
+                    left = split_id(split_entry[1])
+                    right = split_id(split_entry[2])
                     sentence['dependencies'].append(tuple([rel, left, right]))
 
         elif state == STATE_COREFERENCE:
@@ -353,7 +362,7 @@ class StanfordCoreNLP:
             # NER-muc classifier (~60sec)
             # CoNLL classifier (~50sec)
             # PCFG (~3sec)
-            timeouts = [20, 200, 600, 600, 20]
+            timeouts = [600, 600, 600, 600, 600]
             for i in xrange(5):
                 self.corenlp.expect("done.", timeout=timeouts[i])  # Load model
                 pbar.update(i + 1)
